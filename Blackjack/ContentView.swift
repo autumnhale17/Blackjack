@@ -12,17 +12,31 @@ struct ContentView: View {
         ZStack {
             Color.gameBoard
                 .edgesIgnoringSafeArea(.all)
-            
+
+            // Holds the landing page image, title, and button
             VStack {
                 Image(._7Diamond)
                     .resizable()
-                    .frame(width: 100, height: 150, alignment: .bottom)
+                    .frame(width: 150, height: 200, alignment: .bottom)
                     .padding()
-                
+
                 Text("Blackjack").padding()
+                    .font(.system(size: 60, weight: .bold, design: .monospaced))
                 
-                    
-                
+                Button(action: {
+                    print("Button Pressed")
+                }) {
+                    Text("Play")
+                        .font(
+                            .system(
+                                size: 30,
+                                weight: .bold,
+                                design: .monospaced
+                            )
+                        )
+                }
+                .buttonStyleModifier()
+
             }
             .padding()
         }
