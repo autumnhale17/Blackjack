@@ -9,13 +9,23 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world! Welcome")
+        ZStack {
+            Color.gameBoard
+                .edgesIgnoringSafeArea(.all)
+            
+            VStack {
+                Image(._7Diamond)
+                    .resizable()
+                    .frame(width: 100, height: 150, alignment: .bottom)
+                    .padding()
+                
+                Text("Blackjack").padding()
+                
+                    
+                
+            }
+            .padding()
         }
-        .padding()
     }
 }
 
