@@ -15,14 +15,23 @@ struct ContentView: View {
 
             // Holds the landing page image, title, and button
             VStack {
-                Image(._7Diamond)
-                    .resizable()
-                    .frame(width: 150, height: 200, alignment: .bottom)
-                    .padding()
-
+                Spacer()
                 Text("Blackjack").padding()
                     .font(.system(size: 60, weight: .bold, design: .monospaced))
-                
+                HStack {
+                    Spacer()
+                    Image(._7Diamond)
+                        .resizable()
+                        .frame(width: 150, height: 200, alignment: .bottom)
+                        .padding()
+                    Spacer()
+                    Image(.redBack)
+                        .resizable()
+                        .frame(width: 150, height: 200, alignment: .bottom)
+                        .padding()
+                }
+
+                Spacer()
                 Button(action: {
                     print("Button Pressed")
                 }) {
