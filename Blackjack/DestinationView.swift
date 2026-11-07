@@ -9,40 +9,68 @@ import SwiftUI
 
 
 struct DestinationView: View {
-    let deck = Deck()
+    
+    
+    //let topCard: UIImage?
     
     var body: some View {
+        
+        
         ZStack{
             Color.gameBoard
                 .edgesIgnoringSafeArea(.all)
             VStack {
+                var deck = Deck()
+                
+                Spacer()
                 HStack {
-                    ScrollView {
-                        var deck = Deck()
-                        let _ = print(deck.top ?? "Empty")
-                        let _ = deck.shuffle()
-                        let _ = print(deck.top ?? "Empty")
-                        let topCard = deck.drawCard()
-                        CardView(card: topCard!)
-                        let _ = print("Showed a card!")
-                        
-                    }
+                    Spacer()
+                    let _ = deck.shuffle()
+                    let firstCard = deck.drawCard()
+                    CardView(cardImgName: firstCard!)
+                    //                        let _ = print("Showed one card!")
+                    //                        let _ = print(topCard?.cardFileName)
+                    //                        let _ = print(topCard?.image)
+                    //                        let _ = print(topCard?.rank)
+                    //                        let _ = print(topCard?.suit)
+                    
+                    Spacer()
+                    let _ = deck.shuffle()
+                    let secondCard = deck.drawCard()
+                    CardView(cardImgName: secondCard!)
+                    //                        let _ = print("Showed another card!")
+                    //                        let _ = print(topCard?.cardFileName)
+                    //                        let _ = print(topCard?.image)
+                    //                        let _ = print(topCard?.rank)
+                    //                        let _ = print(topCard?.suit)
+                    
+                    // Coming back later for this... next coding sesh :)
+                    //                    let _ = if firstCard > secondCard {
+                    //                        let _ = print("\(firstCard) is higher than \(secondCard)")
+                    //                    } let _ = else {
+                    //                        let _ = print("Hmm not sure...")
+                    //                    }
+                    
+                    
+                    
+                    Text("Here's a card or two!")
                 }
             }
         }
     }
-}
-
-struct CardView: View {
-    var card: Card
-    
-    var body: some View {
-        Image(uiImage: card.image)
-            .resizable()
-            .scaledToFit()
+        
+        struct CardView: View {
+            var cardImgName: Card
             
+            var body: some View {
+                Image(uiImage: cardImgName.image)
+                    .resizable()
+                    .scaledToFit()
+                    .padding()
+                
+                //let _ = print("Made it to CardView!")
+            }
+            
+        }
     }
-    
-    
-}
 

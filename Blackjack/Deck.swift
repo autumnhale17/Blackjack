@@ -10,20 +10,22 @@ import SwiftUI
 // Initializing the deck
 struct Deck {
     
-    enum Suit: String {
-        case clubs = "Clubs"
-        case diamonds = "Diamonds"
-        case hearts = "Hearts"
-        case spades = "Spades"
-    }
+    
 
     struct Rank {
         let name: String
         let rankValue: Int
     }
     
+    enum Suit: String {
+        case clubs = "Clubs"
+        case diamonds = "Diamonds"
+        case hearts = "Hearts"
+        case spades = "Spades"
+    }
+    
     // Creating arrays to hold suit and ranks
-    private var allSuits:[Suit] = [.clubs,.diamonds,.hearts,.spades]
+    private var allSuits:[Suit] = [.clubs, .diamonds, .hearts, .spades]
     
     private var allRanks = [
         Rank(name: "Ace", rankValue: 1),
@@ -93,10 +95,17 @@ struct Card: Comparable, CustomDebugStringConvertible {
     let suit: Deck.Suit
     let rank: Deck.Rank
     
+    var cardFileName: String {
+        get {
+            let cardName = "\(suit.rawValue) \(rank.name)"
+            return cardName
+        }
+    }
+    
     // Definition to tie the created name with the image name of a card
     var image: UIImage {
         get {
-            let imageName = "\(rank.name)\(suit.rawValue)"
+            let imageName = "\(suit.rawValue) \(rank.name)"
             return UIImage(named: imageName) ?? UIImage()
         }
     }
