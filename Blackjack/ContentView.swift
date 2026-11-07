@@ -34,7 +34,7 @@ struct ContentView: View {
                     // Card images
                     HStack {
                         Spacer()
-                        Image(._7Diamond)
+                        Image(.diamondsSeven)
                             .resizable()
                             .frame(width: 150, height: 200, alignment: .bottom)
                             .padding()

@@ -5,16 +5,16 @@
 //  Created by Autumn Hale on 11/5/26.
 //
 
-import UIKit
+import SwiftUI
 
-// Defining the deck of cards with suites and ranks with respective info
+// Initializing the deck
 struct Deck {
-    enum Suite: String {
+    
+    enum Suit: String {
         case clubs = "Clubs"
         case diamonds = "Diamonds"
         case hearts = "Hearts"
         case spades = "Spades"
-
     }
 
     struct Rank {
@@ -22,8 +22,9 @@ struct Deck {
         let rankValue: Int
     }
     
-    // Creating an array to hold suites and ranks
-    private var allSuites: [Suite] = [.clubs, .diamonds, .hearts, .spades]
+    // Creating arrays to hold suit and ranks
+    private var allSuits:[Suit] = [.clubs,.diamonds,.hearts,.spades]
+    
     private var allRanks = [
         Rank(name: "Ace", rankValue: 1),
         Rank(name: "Two", rankValue: 2),
@@ -40,64 +41,75 @@ struct Deck {
         Rank(name: "King", rankValue: 10),
     ]
 
-    // Creating arrays for the deck and available cards in deck
-    private let cards: [Card]
+    // Defining cards as an array with the type Card that can be used to assign suit, rank, etc. to these cards
+    var cards = [Card]()
+    
+    // Defining all cards available as an array of many Card
     private var availableCards: [Card]
     
-    // Initializing
+    // "Create" the cards themselves by assigning each one a suit and rank
     init() {
-        var cards = [Card]()
-        for suite in allSuites {
+        for suit in allSuits {
             for rank in allRanks {
-                cards.append(Card(suite: suite, rank: rank))
+                cards.append(Card(suit: suit, rank: rank))
             }
         }
-        self.cards = cards
+        // Adds all of the cards to the available card variable to be used
         self.availableCards = cards
     }
-
-    //  Function to define what it means to shuffle deck of cards
+    
+    // Shuffles from the available cards in the deck of cards
     mutating public func shuffle() {
-        self.availableCards = self.cards.shuffled()
+            self.availableCards = self.cards.shuffled()
     }
-
-    mutating public func drawCard() -> Card? {
+    
+    // Takes the card off of the top of the available cards in the deck and returns
+    mutating func drawCard() -> Card? {
         if let card = self.availableCards.first {
-            self.availableCards.removeFirst()
-            return card
-        } else {
-            return nil
+                self.availableCards.removeFirst()
+                return card
+            } else {
+                return nil
+            }
+        }
+    
+    // Top is assigned based on the first of the available cards in the deck
+        var top: Card? {
+                get {
+                    return availableCards.first
+                }
+            }
+    
+    // Get the count of how many cards are left in the deck after drawing
+            var remaining: Int {
+                get {
+                    return availableCards.count
+                }
+            }
+        }
+
+// Create a card struct so that we can compare two cards together as well as tie the name of a card to pull an image
+struct Card: Comparable, CustomDebugStringConvertible {
+    let suit: Deck.Suit
+    let rank: Deck.Rank
+    
+    // Definition to tie the created name with the image name of a card
+    var image: UIImage {
+        get {
+            let imageName = "\(rank.name)\(suit.rawValue)"
+            return UIImage(named: imageName) ?? UIImage()
         }
     }
-
-    var top: Card? {
-        return availableCards.first
-    }
-
-    var remaining: Int {
-        return availableCards.count
-    }
-}
-
-struct Card: Comparable, CustomDebugStringConvertible {
-    let suite: Deck.Suite
-    let rank: Deck.Rank
-
-    var image: UIImage {
-        let imageName = "\(rank.name)\(suite.rawValue)"
-        return UIImage(named: imageName) ?? UIImage()
-    }
-
+    
     static func == (lhs: Card, rhs: Card) -> Bool {
-        return lhs.rank.rankValue == rhs.rank.rankValue
-            && lhs.suite == rhs.suite
+        return lhs.rank.rankValue == rhs.rank.rankValue && lhs.suit == rhs.suit
     }
-
+    
     static func < (lhs: Card, rhs: Card) -> Bool {
         return lhs.rank.rankValue < rhs.rank.rankValue
     }
-
+    
     var debugDescription: String {
-        return "\(self.rank.name) of \(self.suite.rawValue)"
+        return "\(self.rank.name) of \(self.suit.rawValue)"
     }
 }
