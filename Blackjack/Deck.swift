@@ -9,8 +9,6 @@ import SwiftUI
 
 // Initializing the deck
 struct Deck {
-    
-    
 
     struct Rank {
         let name: String
@@ -88,7 +86,8 @@ struct Deck {
                     return availableCards.count
                 }
             }
-        }
+        
+    }
 
 // Create a card struct so that we can compare two cards together as well as tie the name of a card to pull an image
 struct Card: Comparable, CustomDebugStringConvertible {
@@ -121,4 +120,6 @@ struct Card: Comparable, CustomDebugStringConvertible {
     var debugDescription: String {
         return "\(self.rank.name) of \(self.suit.rawValue)"
     }
+    
+    
 }
