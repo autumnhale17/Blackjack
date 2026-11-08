@@ -48,7 +48,7 @@ struct ContentView: View {
                     // Button to navigate to gameplay view
                     Spacer()
                     NavigationLink(
-                        destination: DestinationView(),
+                        destination: DestinationView().navigationBarBackButtonHidden(true),
                         isActive: $isShowingGamearea
                     ) { }
 

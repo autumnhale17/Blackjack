@@ -20,7 +20,13 @@ struct GameplayLogic {
         }
     }
     
-    //func calculate...
+    func calculatePlayerScore(firstCardValue: Card, secondCardValue: Card) -> Int {
+        return firstCardValue.rank.rankValue + secondCardValue.rank.rankValue
+    }
+    
+    func calculateDealerScore(firstCardValue: Card, secondCardValue: Card) -> Int {
+        return firstCardValue.rank.rankValue + secondCardValue.rank.rankValue
+    }
     
     
     

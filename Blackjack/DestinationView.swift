@@ -20,7 +20,14 @@ struct DestinationView: View {
                 .edgesIgnoringSafeArea(.all)
             VStack {
                 
-                Text("Dealer")
+                // Shuffle and draw the dealer's two cards. Only show one at first.
+                let _ = deck.shuffle()
+                let dealerFirstCard = deck.drawCard()
+                let dealerSecondCard = deck.drawCard()
+                
+                
+                // Shows the dealer's current known score
+                Text("Dealer Score: " + String((dealerFirstCard?.rank.rankValue)!))
                     .font(
                         .system(
                             size: 20,
@@ -28,53 +35,51 @@ struct DestinationView: View {
                             design: .monospaced
                         )
                     )
+                    .padding()
+                    .background(
+                        LinearGradient(
+                            colors: [.gold, .orange],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .cornerRadius(40)
+                    .overlay( /// apply a rounded border
+                        RoundedRectangle(cornerRadius: 40)
+                            .stroke(.orange, lineWidth: 3)
+                    )
+                    .padding(.top, 30)
+                    .padding(.bottom, -20)
                 
+                // Display one of the cards at first alongside a face down card
                     HStack {
-                        
-                        
-                        let _ = deck.shuffle()
-                        let dealerFirstCard = deck.drawCard()
                         CardView(cardImgName: dealerFirstCard!)
-                        //                        let _ = print("Showed one card!")
-                        //                        let _ = print(topCard?.cardFileName)
-                        //                        let _ = print(topCard?.image)
-                        //                        let _ = print(topCard?.rank)
-                        //                        let _ = print(topCard?.suit)
+//                        let _ = print("Showed one card!")
+//                        let _ = print(topCard?.cardFileName)
+//                        let _ = print(topCard?.image)
+//                        let _ = print(topCard?.rank)
+//                        let _ = print(topCard?.suit)
                         
-                        let _ = deck.shuffle()
-                        let dealerSecondCard = deck.drawCard()
                         FaceDownCardView()
-                        //                        let _ = print("Showed another card!")
-                        //                        let _ = print(topCard?.cardFileName)
-                        //                        let _ = print(topCard?.image)
-                        //                        let _ = print(topCard?.rank)
-                        //                        let _ = print(topCard?.suit)
+//                        let _ = print("Showed another card!")
+//                        let _ = print(topCard?.cardFileName)
+//                        let _ = print(topCard?.image)
+//                        let _ = print(topCard?.rank)
+//                        let _ = print(topCard?.suit)
                         
-                        // Coming back later for this... next coding sesh :)
-                        //                    let _ = if firstCard > secondCard {
-                        //                        let _ = print("\(firstCard) is higher than \(secondCard)")
-                        //                    } let _ = else {
-                        //                        let _ = print("Hmm not sure...")
-                        //                    }
-                        
-                        let _ = print("Dealer card comparison: ")
-                        let _ = gameplayLogic.compareTwoCards(firstCard: dealerFirstCard!, secondCard: dealerSecondCard!)
+//                        let _ = print("Dealer card comparison: ")
+//                        let _ = gameplayLogic.compareTwoCards(firstCard: dealerFirstCard!, secondCard: dealerSecondCard!)
                         
                     }
-                
-                    .padding()
-                    .border(.gold, width: 4)
-                    .padding()
-                    
+                    //.border(.gold, width: 4)
                     
                 
-                Spacer()
+                // Shuffle and draw two cards
+                let _ = deck.shuffle()
+                let playerFirstCard = deck.drawCard()
+                let playerSecondCard = deck.drawCard()
                 
                 HStack {
-                    
-                    let _ = deck.shuffle()
-                    let playerFirstCard = deck.drawCard()
-                    
                     ZStack(alignment: .trailing) {
                         ZStack{
                             CardView(cardImgName: playerFirstCard!)
@@ -87,10 +92,6 @@ struct DestinationView: View {
                         }
                         .offset(x: 40)
                             
-                            let _ = deck.shuffle()
-                            let playerSecondCard = deck.drawCard()
-                            
-                            
                             CardView(cardImgName: playerSecondCard!)
                             // let _ = print("Showed another card!")
                             // let _ = print(topCard?.cardFileName)
@@ -102,16 +103,38 @@ struct DestinationView: View {
                             let _ = print("Player card comparison: ")
                             let _ = gameplayLogic.compareTwoCards(firstCard: playerFirstCard!, secondCard: playerSecondCard!)
                         
-                        
-                        
-                        Text()
-                        
                     }
                     
                     .padding(.trailing, 25)
+                    
                 }
-                Spacer()
+                .padding(.bottom, -40)
                 
+                // Shows the player's current score
+                let currentPlayerScore = gameplayLogic.calculatePlayerScore(firstCardValue: playerFirstCard!, secondCardValue: playerSecondCard!)
+                Text("Player Score: " + String(currentPlayerScore))
+                    .font(
+                        .system(
+                            size: 20,
+                            weight: .bold,
+                            design: .monospaced
+                        )
+                    )
+                    .padding()
+                    .background(
+                        LinearGradient(
+                            colors: [.gold, .orange],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .cornerRadius(40)
+                    .overlay( /// apply a rounded border
+                        RoundedRectangle(cornerRadius: 40)
+                            .stroke(.orange, lineWidth: 3)
+                    )
+                
+                    .padding()
                 
                 
                 // Buttons for user to play the game
@@ -183,6 +206,8 @@ struct DestinationView: View {
                     
                     Spacer()
                 }
+                Spacer()
+                Spacer()
                 
             }
         }
@@ -217,5 +242,6 @@ struct DestinationView: View {
         }
         
     }
+    
 }
 
