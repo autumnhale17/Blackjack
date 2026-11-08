@@ -12,13 +12,15 @@ import SwiftUI
 struct ButtonStyleModifier : ViewModifier {
     func body(content: Content) -> some View {
         content
+            .font(.headline)
+            .fontWeight(.bold)
+            .foregroundColor(.white)
             .padding()
-            .foregroundColor(Color.white)
             .background(Color.blue)
-            .overlay(
-                RoundedRectangle(cornerRadius: 8)
-                    .stroke(Color.black, lineWidth: 2)
-            )
+            .cornerRadius(10)
+            .shadow(color: .blue.opacity(0.3), radius: 5, x: 0, y: 5)
+        
+        
     }
 }
     

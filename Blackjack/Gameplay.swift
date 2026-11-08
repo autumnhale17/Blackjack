@@ -20,6 +20,8 @@ struct GameplayLogic {
         }
     }
     
+    //func calculate...
+    
     
     
     

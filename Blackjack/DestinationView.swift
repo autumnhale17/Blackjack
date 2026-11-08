@@ -20,7 +20,18 @@ struct DestinationView: View {
                 .edgesIgnoringSafeArea(.all)
             VStack {
                 
+                Text("Dealer")
+                    .font(
+                        .system(
+                            size: 20,
+                            weight: .bold,
+                            design: .monospaced
+                        )
+                    )
+                
                     HStack {
+                        
+                        
                         let _ = deck.shuffle()
                         let dealerFirstCard = deck.drawCard()
                         CardView(cardImgName: dealerFirstCard!)
@@ -49,45 +60,135 @@ struct DestinationView: View {
                         let _ = print("Dealer card comparison: ")
                         let _ = gameplayLogic.compareTwoCards(firstCard: dealerFirstCard!, secondCard: dealerSecondCard!)
                         
-                        Text("Here's a card or two!")
                     }
+                
+                    .padding()
+                    .border(.gold, width: 4)
+                    .padding()
+                    
+                    
+                
+                Spacer()
                 
                 HStack {
                     
                     let _ = deck.shuffle()
-                    let firstCard = deck.drawCard()
-                    CardView(cardImgName: firstCard!)
-                    //                        let _ = print("Showed one card!")
-                    //                        let _ = print(topCard?.cardFileName)
-                    //                        let _ = print(topCard?.image)
-                    //                        let _ = print(topCard?.rank)
-                    //                        let _ = print(topCard?.suit)
+                    let playerFirstCard = deck.drawCard()
                     
-                    let _ = deck.shuffle()
-                    let secondCard = deck.drawCard()
-                    CardView(cardImgName: secondCard!)
-                    //                        let _ = print("Showed another card!")
-                    //                        let _ = print(topCard?.cardFileName)
-                    //                        let _ = print(topCard?.image)
-                    //                        let _ = print(topCard?.rank)
-                    //                        let _ = print(topCard?.suit)
+                    ZStack(alignment: .trailing) {
+                        ZStack{
+                            CardView(cardImgName: playerFirstCard!)
+                            // let _ = print("Showed one card!")
+                            // let _ = print(topCard?.cardFileName)
+                            // let _ = print(topCard?.image)
+                            // let _ = print(topCard?.rank)
+                            // let _ = print(topCard?.suit)
+                            
+                        }
+                        .offset(x: 40)
+                            
+                            let _ = deck.shuffle()
+                            let playerSecondCard = deck.drawCard()
+                            
+                            
+                            CardView(cardImgName: playerSecondCard!)
+                            // let _ = print("Showed another card!")
+                            // let _ = print(topCard?.cardFileName)
+                            // let _ = print(topCard?.image)
+                            // let _ = print(topCard?.rank)
+                            // let _ = print(topCard?.suit)
+                            
+                            
+                            let _ = print("Player card comparison: ")
+                            let _ = gameplayLogic.compareTwoCards(firstCard: playerFirstCard!, secondCard: playerSecondCard!)
+                        
+                        
+                        
+                        Text()
+                        
+                    }
                     
-                    // Coming back later for this... next coding sesh :)
-                    //                    let _ = if firstCard > secondCard {
-                    //                        let _ = print("\(firstCard) is higher than \(secondCard)")
-                    //                    } let _ = else {
-                    //                        let _ = print("Hmm not sure...")
-                    //                    }
-                    
-                    let _ = print("Player card comparison: ")
-                    let _ = gameplayLogic.compareTwoCards(firstCard: firstCard!, secondCard: secondCard!)
-                    
-                    Text("Here's a card or two!")
+                    .padding(.trailing, 25)
                 }
+                Spacer()
+                
+                
+                
+                // Buttons for user to play the game
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        // print("Hit Button Pressed")
+                        
+                    }) {
+                        Text("Hit")
+                            .font(
+                                .system(
+                                    size: 20,
+                                    weight: .bold,
+                                    design: .monospaced
+                                )
+                            )
+                    }
+                    .foregroundColor(.white)
+                    .padding()
+                    .background(Color.green)
+                    .cornerRadius(10)
+                    .shadow(color: .blue.opacity(0.3), radius: 5, x: 0, y: 5)
+                    
+                    Spacer()
+                    
+                    
+                    Button(action: {
+                        // print("Stand Button Pressed")
+                        
+                    }) {
+                        Text("Stand")
+                            .font(
+                                .system(
+                                    size: 20,
+                                    weight: .bold,
+                                    design: .monospaced
+                                )
+                            )
+                    }
+                    .foregroundColor(.white)
+                    .padding()
+                    .background(Color.orange)
+                    .cornerRadius(10)
+                    .shadow(color: .blue.opacity(0.3), radius: 5, x: 0, y: 5)
+                    
+                    Spacer()
+                    
+                    
+                    Button(action: {
+                        // print("Double Down Button Pressed")
+                        
+                    }) {
+                        Text("Double Down")
+                            .font(
+                                .system(
+                                    size: 20,
+                                    weight: .bold,
+                                    design: .monospaced
+                                )
+                            )
+                    }
+                    
+                    .foregroundColor(.white)
+                    .padding()
+                    .background(Color.gold)
+                    .cornerRadius(10)
+                    .shadow(color: .blue.opacity(0.3), radius: 5, x: 0, y: 5)
+                    
+                    Spacer()
+                }
+                
             }
         }
     }
         
+    // Allows us to see the card itself by taking in a card and pulling the respective uiImage
         struct CardView: View {
             var cardImgName: Card
             
@@ -95,20 +196,22 @@ struct DestinationView: View {
                 Image(uiImage: cardImgName.image)
                     .resizable()
                     .scaledToFit()
-                    .padding()
+                    .frame(width: 140, height: 280)
                 
                 //let _ = print("Made it to CardView!")
             }
             
         }
     
+    // Allows us to visually see a face down card
     struct FaceDownCardView: View {
         
         var body: some View {
             Image(uiImage: .redBack)
                 .resizable()
                 .scaledToFit()
-                .padding()
+                .frame(width: 140, height: 280)
+            
             
             //let _ = print("Made it to FaceDownCardView!")
         }
