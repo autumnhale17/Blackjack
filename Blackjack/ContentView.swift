@@ -39,7 +39,7 @@ struct ContentView: View {
                             .frame(width: 150, height: 200, alignment: .bottom)
                             .padding()
                         Spacer()
-                        Image(.redBack)
+                        Image(.backRed)
                             .resizable()
                             .frame(width: 150, height: 200, alignment: .bottom)
                             .padding()

@@ -13,7 +13,6 @@ struct DestinationView: View {
     // Creating instance of a deck to be used
     @State var deck = Deck()
     
-    let gameplayLogic = GameplayLogic()
     let endgameView = EndgameViews()
     
     @State var dealerFirstCard: Card?
@@ -28,6 +27,31 @@ struct DestinationView: View {
     // Flag for if the dealer's second card is shown
     @State var isDealerSecondCardRevealed = false
     
+    // For popup when game over
+    @State private var endgameMessage = ""
+    @State private var showEndgameAlert = false
+    
+    // An array for only the dealer's cards that are face up and known
+    var showingDealerCards: [Card] {
+        var cards: [Card] = []
+
+        // If dealer has a first card, append
+        if let dealerFirstCard {
+            cards.append(dealerFirstCard)
+        }
+
+        // If we know the second card's value already, put that in
+        if isDealerSecondCardRevealed, let dealerSecondCard {
+            cards.append(dealerSecondCard)
+        }
+
+        // From there on, append the rest of the cards
+        for card in dealerHandCards {
+            cards.append(card)
+        }
+        return cards
+    }
+    
     var body: some View {
         
         ZStack{
@@ -35,7 +59,7 @@ struct DestinationView: View {
                 .edgesIgnoringSafeArea(.all)
             VStack {
                 
-                HStack {
+                HStack(spacing: -60){
                     
                     // Show dealer's first card
                     if let dealerFirstCard {
@@ -58,44 +82,14 @@ struct DestinationView: View {
                     }
                 }
                 
-                // Shows the dealer's current known score
-//                Text("Dealer Score: " + String((12)!))
-//                    .font(
-//                        .system(
-//                            size: 20,
-//                            weight: .bold,
-//                            design: .monospaced
-//                        )
-//                    )
-//                    .padding()
-//                    .background(
-//                        LinearGradient(
-//                            colors: [.gold, .orange],
-//                            startPoint: .topLeading,
-//                            endPoint: .bottomTrailing
-//                        )
-//                    )
-//                    .cornerRadius(40)
-//                    .overlay(
-//                        RoundedRectangle(cornerRadius: 40)
-//                            .stroke(.orange, lineWidth: 3)
-//                    )
-//                    .padding(.top, 30)
-//                    .padding(.bottom, -20)
+                // Shows the dealer's current known score based on seen cards
+                ShowDealerScore(dealerCards: showingDealerCards)
                 
                 // Show every card in player's hand
-                HStack {
-                    ZStack(alignment: .trailing) {
-                        ZStack{
-                            ForEach(playerCards.indices, id: \.self) { index in
-                                CardView(cardImgName: playerCards[index])
-                            }
-                            .offset(x: 40)
+                HStack (spacing: -60) {
+                        ForEach(playerCards.indices, id: \.self) { index in
+                            CardView(cardImgName: playerCards[index])
                         }
-                        //.padding(.trailing, 25)
-                    }
-                    
-                    
                 }
                 // Calculate the player's score and show
                 PlayerScoreView(cards: playerCards)
@@ -106,9 +100,7 @@ struct DestinationView: View {
                     Button("Stand", action: {
                         let _ = print("Stand Button Pressed")
                         
-                        
-                        
-                        //let playerStands = gameplayLogic.stand(playerFirstCard: playerFirstCard!, playerSecondCard: playerSecondCard!, dealerFirstCard: dealerFirstCard!, dealerSecondCard: dealerSecondCard!)
+                        isDealerSecondCardRevealed = true
                         
                         //endgameView.checkEndgameResult(gameCondition: playerStands)
                     })
@@ -130,8 +122,14 @@ struct DestinationView: View {
                     
                     
                     Button( action: {
-                        // print("Stand Button Pressed")
+                         print("Hit Button Pressed")
                         
+                        playerCards.append(deck.drawCard()!)
+                        
+                        if PlayerScoreView(cards: playerCards).lowScore > 21 {
+                            endgameMessage = endgameView.checkEndgameResult(for: 3)
+                            showEndgameAlert = true
+                        }
                     }) {
                         Text("Hit")
                             .font(
@@ -153,6 +151,8 @@ struct DestinationView: View {
                     
                     Button(action: {
                         // print("Double Down Button Pressed")
+                        
+                        isDealerSecondCardRevealed = true
                         
                     }) {
                         Text("Double Down")
@@ -177,7 +177,18 @@ struct DestinationView: View {
                 Spacer()
             }
             
+            // Pops up when showEndgameAlert is true
+            .alert("Game Over", isPresented: $showEndgameAlert) {
+                Button("Play Again...") {
+                    showEndgameAlert = false
+                    endgameMessage = ""
+                }
+            } message: {
+                Text(endgameMessage)
+            }
+            
         }
+        
         // Only deal when this view first appears
         .onAppear {
             // If the dealer has been dealt at least on card, we won't redeal
@@ -213,36 +224,80 @@ struct DestinationView: View {
         
     }
 
-    struct PlayerScoreView: View {
+struct ShowDealerScore: View {
+    
+    let dealerCards: [Card]
+    
+    // Calculates dealer's score based on only what is visually seen
+    var knownScore: Int {
+       var score = 0
+
+       for card in dealerCards {
+           score = score + card.rank.rankValue
+       }
+        return score
+   }
+    
+    var body: some View {
+        Text("Dealer Score: " + String(knownScore))
+            .font(
+                .system(
+                    size: 20,
+                    weight: .bold,
+                    design: .monospaced
+                )
+            )
+            .padding()
+            .background(
+                LinearGradient(
+                    colors: [.gold, .orange],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+            )
+            .cornerRadius(40)
+            .overlay(
+                RoundedRectangle(cornerRadius: 40)
+                    .stroke(.orange, lineWidth: 3)
+            )
         
-        let cards: [Card]
+            .padding()
+    }
+    
+}
 
-        // Calculating Ace as 1's
-         var lowScore: Int {
-            var score = 0
 
-            for card in cards {
-                score = score + card.rank.rankValue
-            }
-            
-            return score
+
+struct PlayerScoreView: View {
+    
+    let cards: [Card]
+    
+    // Calculating Ace as 1's
+    var lowScore: Int {
+        var score = 0
+        
+        for card in cards {
+            score = score + card.rank.rankValue
         }
-
-        // If the hand has an Ace, we do further calculations
-         var hasAce: Bool {
-            var foundAce = false
-
-            for card in cards {
-                if card.rank.rankValue == 1 {
-                    foundAce = true
-                }
+        
+        return score
+    }
+    
+    // If the hand has an Ace, we do further calculations
+    var hasAce: Bool {
+        var foundAce = false
+        
+        for card in cards {
+            if card.rank.rankValue == 1 {
+                foundAce = true
             }
-            
-            return foundAce
         }
-
-        // If player as an Ace and has not busted, show both their scores
-        var body: some View {
+        
+        return foundAce
+    }
+    
+    // If player has an Ace and has not busted, show both their scores
+    var body: some View {
             if hasAce && lowScore + 10 <= 21 {
                 ShowPlayerScoreWithAce(
                     currentPlayerScore: lowScore,
@@ -253,10 +308,10 @@ struct DestinationView: View {
             else {
                 ShowPlayerScore(currentPlayerScore: lowScore)
             }
-            
-        }
         
     }
+}
+    
         
         struct ShowPlayerScore: View {
             

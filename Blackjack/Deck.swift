@@ -124,9 +124,3 @@ struct Card: Comparable, CustomDebugStringConvertible {
     
     
 }
-
-struct GameCard: Identifiable {
-    let id = UUID()
-    var img = UIImage.self
-    
-}

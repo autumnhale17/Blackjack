@@ -9,27 +9,22 @@ import SwiftUI
 
 struct EndgameViews {
     
-    func checkEndgameResult (gameCondition: Int) {
+    func checkEndgameResult ( for gameCondition: Int) -> String {
         
         // If the game condition is 2, show the player win's view
         if (gameCondition == 2) {
-            struct playerWinView: View {
-                
-                var body: some View {
-                    let _ = print("Player Wins!!!")
-                }
-                
-            }
+            let _ = print("Player Wins!!!")
+            return "Winner winner!"
         }
         
         // If the game condition is 3, show the player's lose view
-        struct playerLoseView: View {
+        if gameCondition == 3 {
+            //let _ = print("Player Loses.")
             
-            var body: some View {
-                let _ = print("Player Loses!!! Sorry...")
-            }
-            
+            return "Busted!"
         }
+        
+        return "End of Game"
     }
     
 }
