@@ -50,7 +50,7 @@ struct Deck {
     // "Create" the cards themselves by assigning each one a suit and rank
     init() {
         for suit in allSuits {
-            for rank in allRanks {
+            for rank in allRanks{
                 cards.append(Card(suit: suit, rank: rank))
             }
         }
@@ -91,6 +91,7 @@ struct Deck {
 
 // Create a card struct so that we can compare two cards together as well as tie the name of a card to pull an image
 struct Card: Comparable, CustomDebugStringConvertible {
+    
     let suit: Deck.Suit
     let rank: Deck.Rank
     
@@ -121,5 +122,11 @@ struct Card: Comparable, CustomDebugStringConvertible {
         return "\(self.rank.name) of \(self.suit.rawValue)"
     }
     
+    
+}
+
+struct GameCard: Identifiable {
+    let id = UUID()
+    var img = UIImage.self
     
 }
