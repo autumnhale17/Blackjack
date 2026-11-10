@@ -9,7 +9,7 @@ import SwiftUI
 
 // Initializing the deck
 struct Deck {
-
+    
     struct Rank {
         let name: String
         let rankValue: Int
@@ -40,7 +40,7 @@ struct Deck {
         Rank(name: "Queen", rankValue: 10),
         Rank(name: "King", rankValue: 10),
     ]
-
+    
     // Defining cards as an array with the type Card that can be used to assign suit, rank, etc. to these cards
     var cards = [Card]()
     
@@ -60,34 +60,34 @@ struct Deck {
     
     // Shuffles from the available cards in the deck of cards
     mutating public func shuffle() {
-            self.availableCards = self.cards.shuffled()
+        self.availableCards = self.cards.shuffled()
     }
     
     // Takes the card off of the top of the available cards in the deck and returns
     mutating func drawCard() -> Card? {
         if let card = self.availableCards.first {
-                self.availableCards.removeFirst()
-                return card
-            } else {
-                return nil
-            }
+            self.availableCards.removeFirst()
+            return card
+        } else {
+            return nil
         }
+    }
     
     // Top is assigned based on the first of the available cards in the deck
-        var top: Card? {
-                get {
-                    return availableCards.first
-                }
-            }
+    var top: Card? {
+        get {
+            return availableCards.first
+        }
+    }
     
     // Get the count of how many cards are left in the deck after drawing
-            var remaining: Int {
-                get {
-                    return availableCards.count
-                }
-            }
-        
+    var remaining: Int {
+        get {
+            return availableCards.count
+        }
     }
+    
+}
 
 // Create a card struct so that we can compare two cards together as well as tie the name of a card to pull an image
 struct Card: Comparable, CustomDebugStringConvertible {

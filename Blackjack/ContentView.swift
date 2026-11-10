@@ -8,17 +8,17 @@
 import SwiftUI
 
 struct ContentView: View {
-
+    
     // Variable to hold whether the gameplay page can be showed or not
     @State private var isShowingGamearea = false
-
+    
     var body: some View {
-
+        
         NavigationView {
             ZStack {
                 Color.gameBoard
                     .edgesIgnoringSafeArea(.all)
-
+                
                 // Holds the landing page image, title, and button
                 VStack {
                     Spacer()
@@ -44,14 +44,14 @@ struct ContentView: View {
                             .frame(width: 150, height: 200, alignment: .bottom)
                             .padding()
                     }
-
+                    
                     // Button to navigate to gameplay view
                     Spacer()
                     NavigationLink(
                         destination: DestinationView().navigationBarBackButtonHidden(true),
                         isActive: $isShowingGamearea
                     ) { }
-
+                    
                     Button(action: {
                         // print("Play Button Pressed")
                         isShowingGamearea = true

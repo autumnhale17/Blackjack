@@ -31,6 +31,63 @@ struct DestinationView: View {
     @State private var endgameMessage = ""
     @State private var showEndgameAlert = false
     
+    // Calculate the dealer's score based on all cards fro game checks
+    private var dealerScore: Int {
+        var score = 0
+        var hasAce = false
+        
+        // Check the first and second cards
+        if let card = dealerFirstCard {
+            score = score + card.rank.rankValue
+            if card.rank.rankValue == 1 {
+                hasAce = true
+            }
+        }
+        
+        if let card = dealerSecondCard {
+            score = score + card.rank.rankValue
+            if card.rank.rankValue == 1 {
+                hasAce = true
+            }
+        }
+        
+        // Check the rest of the cards
+        for card in dealerHandCards {
+            score = score + card.rank.rankValue
+            if card.rank.rankValue == 1 {
+                hasAce = true
+            }
+        }
+        
+        // If the dealer has an Ace and counting an Ace as a 11 would keep them 21 or under, do it!
+        if hasAce && score + 10 <= 21 {
+            score = score + 10
+        }
+        
+        return score
+    }
+    
+    // Calculate the players's score based on all cards fro game checks
+    private var playerScore: Int {
+        var score = 0
+        var hasAce = false
+        
+        // Check all of the cards for Ace
+        for card in playerCards {
+            score = score + card.rank.rankValue
+            if card.rank.rankValue == 1 {
+                hasAce = true
+            }
+        }
+        
+        // If the player has an Ace and counting an Ace as a 11 would keep them 21 or under, do it!
+        if hasAce && score + 10 <= 21 {
+            score = score + 10
+        }
+        
+        return score
+    }
+    
     // An array for only the dealer's cards that are face up and known
     var showingDealerCards: [Card] {
         var cards: [Card] = []
@@ -87,9 +144,9 @@ struct DestinationView: View {
                 
                 // Show every card in player's hand
                 HStack (spacing: -60) {
-                        ForEach(playerCards.indices, id: \.self) { index in
-                            CardView(cardImgName: playerCards[index])
-                        }
+                    ForEach(playerCards.indices, id: \.self) { index in
+                        CardView(cardImgName: playerCards[index])
+                    }
                 }
                 // Calculate the player's score and show
                 PlayerScoreView(cards: playerCards)
@@ -98,12 +155,51 @@ struct DestinationView: View {
                 HStack {
                     Spacer()
                     Button("Stand", action: {
-                        let _ = print("Stand Button Pressed")
+                        //let _ = print("Stand Button Pressed")
                         
                         isDealerSecondCardRevealed = true
                         
-                        //endgameView.checkEndgameResult(gameCondition: playerStands)
-                    })
+                        // Dealer draws until 17 or higher, then compares
+                        while dealerScore < 17 {
+                            if let card = deck.drawCard() {
+                                dealerHandCards.append(card)
+                            } else {
+                                break
+                            }
+                        }
+                        
+                        // If dealer busts
+                        if dealerScore > 21 {
+                            endgameMessage = endgameView.checkEndgameResult(for: 2)
+                            showEndgameAlert = true
+                            isDealerSecondCardRevealed = true
+                        }
+                        
+                        // If dealer has lower score
+                        else if dealerScore < playerScore {
+                            endgameMessage = endgameView.checkEndgameResult(for: 2)
+                            showEndgameAlert = true
+                            isDealerSecondCardRevealed = true
+                        }
+                        
+                        // If dealer has a higher score
+                        else if dealerScore > playerScore {
+                            endgameMessage = endgameView.checkEndgameResult(for: 3)
+                            showEndgameAlert = true
+                            isDealerSecondCardRevealed = true
+                        }
+                        
+                        // Tie
+                        else {
+                            endgameMessage = endgameView.checkEndgameResult(for: 4)
+                            showEndgameAlert = true
+                            isDealerSecondCardRevealed = true
+                        }
+                        
+                        
+                    }
+                           
+                    )
                     .font(
                         .system(
                             size: 20,
@@ -122,14 +218,17 @@ struct DestinationView: View {
                     
                     
                     Button( action: {
-                         print("Hit Button Pressed")
+                        print("Hit Button Pressed")
                         
                         playerCards.append(deck.drawCard()!)
                         
-                        if PlayerScoreView(cards: playerCards).lowScore > 21 {
+                        // Player busts
+                        if playerScore > 21 {
                             endgameMessage = endgameView.checkEndgameResult(for: 3)
                             showEndgameAlert = true
+                            isDealerSecondCardRevealed = true
                         }
+                        
                     }) {
                         Text("Hit")
                             .font(
@@ -154,6 +253,54 @@ struct DestinationView: View {
                         
                         isDealerSecondCardRevealed = true
                         
+                        playerCards.append(deck.drawCard()!)
+                        
+                        
+                        
+                        // Dealer draws until 17 or higher, then compares
+                        while dealerScore < 17 {
+                            if let card = deck.drawCard() {
+                                dealerHandCards.append(card)
+                            } else {
+                                break
+                            }
+                        }
+                        
+                        // Player busts
+                        if playerScore > 21 {
+                            endgameMessage = endgameView.checkEndgameResult(for: 3)
+                            showEndgameAlert = true
+                        }
+                        
+                        // If dealer busts
+                        else if dealerScore > 21 {
+                            endgameMessage = endgameView.checkEndgameResult(for: 2)
+                            showEndgameAlert = true
+                            isDealerSecondCardRevealed = true
+                        }
+                        
+                        // If dealer has lower score
+                        else if dealerScore < playerScore {
+                            endgameMessage = endgameView.checkEndgameResult(for: 2)
+                            showEndgameAlert = true
+                            isDealerSecondCardRevealed = true
+                        }
+                        
+                        // If dealer has a higher score
+                        else if dealerScore > playerScore {
+                            endgameMessage = endgameView.checkEndgameResult(for: 3)
+                            showEndgameAlert = true
+                            isDealerSecondCardRevealed = true
+                        }
+                        
+                        // Tie
+                        else {
+                            endgameMessage = endgameView.checkEndgameResult(for: 4)
+                            showEndgameAlert = true
+                            isDealerSecondCardRevealed = true
+                        }
+                        
+                        
                     }) {
                         Text("Double Down")
                             .font(
@@ -173,11 +320,10 @@ struct DestinationView: View {
                     
                     Spacer()
                 }
-                Spacer()
-                Spacer()
             }
+            Spacer()
             
-            // Pops up when showEndgameAlert is true
+            // Pops up when showEndgameAlert is true, when button is clicked the message is blank again & reset
             .alert("Game Over", isPresented: $showEndgameAlert) {
                 Button("Play Again...") {
                     showEndgameAlert = false
@@ -206,7 +352,9 @@ struct DestinationView: View {
             playerCards.append(deck.drawCard()!)
         }
         
+        
     }
+
 }
     
     // Allows us to see the card itself by taking in a card and pulling the respective uiImage
@@ -223,6 +371,7 @@ struct DestinationView: View {
         }
         
     }
+
 
 struct ShowDealerScore: View {
     

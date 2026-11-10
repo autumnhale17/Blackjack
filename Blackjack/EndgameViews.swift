@@ -14,17 +14,22 @@ struct EndgameViews {
         // If the game condition is 2, show the player win's view
         if (gameCondition == 2) {
             let _ = print("Player Wins!!!")
-            return "Winner winner!"
+            return "BLACKJACK!"
         }
         
         // If the game condition is 3, show the player's lose view
         if gameCondition == 3 {
             //let _ = print("Player Loses.")
             
-            return "Busted!"
+            return "You lost!"
         }
         
-        return "End of Game"
+        // If the game condition is 4, show the tie
+        else {
+            //let _ = print("Player tie.")
+            
+            return "It's a tie!"
+        }
     }
     
 }
