@@ -29,3 +29,5 @@
 + Profile Page
 + Settings
 + Rules
+
+###### Credit to KerneL on Itch.io for the free pixel art card assets! Check them out here -> https://kerenel.itch.io/pixelart-cards
